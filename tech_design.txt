@@ -27,3 +27,14 @@ Shopping list:
 Item
 { id, name, quantity, added_date, is_checked, shopping_list_id }
 
+Misc
+Logging
+Error handling
+Unified response handling
+Unified database interface
+Authentication middlewares
+Redirect
+Data validation
+Encryption
+Testing
+Goroutines
