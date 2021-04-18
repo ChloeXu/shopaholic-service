@@ -1,0 +1,29 @@
+Product
+A shopping list Mobile App
+
+Goal
+Backend: Learn to write a service exposing REST API endpoints in Golang
+Frontend: Learn to create a multi-view iOS app in React Native
+
+Requirement
+Allow user to create a new shopping list
+Allow user to select a shopping list and retrieve the items on it
+Allow user to add an item to a shopping list
+Allow user to change the flag on the item to indicate “checked” or “unchecked”
+Allow user to delete an item from a shopping list
+Allow user to remove a shopping list completely
+
+APIs
+/v1/shopping-list POST  {name, created_date}
+/v1/shopping-list/{listId} GET
+/v1/shopping-list/{listId}/item POST {name, quantity}
+/v1/shopping-list/{listId}/item/{itemId} DELETE 
+/v1/shopping-list/{listId}/item/{itemId} PATCH {is_checked} 
+/v1/shopping-list/{listId} DELETE
+
+Data models
+Shopping list:
+{ id, name, created_date, items }
+Item
+{ id, name, quantity, added_date, is_checked, shopping_list_id }
+
