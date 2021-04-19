@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 )
 
+// Page is a struct
 type Page struct {
 	Title string
 	Body  []byte

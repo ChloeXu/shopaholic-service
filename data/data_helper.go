@@ -16,6 +16,7 @@ func writeListsToFile(lists []types.ShoppingList) {
 	ioutil.WriteFile(filename, bytes, 0600)
 }
 
+// GetShoppingLists returns a list of shoppingList
 func GetShoppingLists() ([]types.ShoppingList, error) {
 	filename := "./data/sample.json"
 	jsonFile, err := os.Open(filename)
@@ -31,17 +32,19 @@ func GetShoppingLists() ([]types.ShoppingList, error) {
 	return data, nil
 }
 
+// CreateShoppingList returns a ShoppingList
 func CreateShoppingList(list types.ShoppingList) (types.ShoppingList, error) {
 	lists, _ := GetShoppingLists()
-	newId := lists[len(lists)-1].ID + 1
-	list.ID = newId
+	newID := lists[len(lists)-1].ID + 1
+	list.ID = newID
 	list.Items = []types.ListItem{}
 	lists = append(lists, list)
 	writeListsToFile(lists)
 	return list, nil
 }
 
-func GetShoppingList(listId string) (types.ShoppingList, error) {
+// GetShoppingList returns a ShoppingList
+func GetShoppingList(listID string) (types.ShoppingList, error) {
 	lists, err := GetShoppingLists()
 	if err != nil {
 		fmt.Println(err)
@@ -49,23 +52,24 @@ func GetShoppingList(listId string) (types.ShoppingList, error) {
 	}
 	var found types.ShoppingList
 	for _, list := range lists {
-		listIdInt, _ := strconv.Atoi(listId)
-		if list.ID == listIdInt {
+		listIDInt, _ := strconv.Atoi(listID)
+		if list.ID == listIDInt {
 			found = list
 		}
 	}
 	return found, nil
 }
 
-func RemoveShoppingList(listId string) ([]types.ShoppingList, error) {
+// RemoveShoppingList returns a ShoppingList
+func RemoveShoppingList(listID string) ([]types.ShoppingList, error) {
 	lists, err := GetShoppingLists()
-	listIdInt, _ := strconv.Atoi(listId)
+	listIDInt, _ := strconv.Atoi(listID)
 	if err != nil {
 		fmt.Println(err)
 		return []types.ShoppingList{}, err
 	}
 	for i, list := range lists {
-		if list.ID == listIdInt {
+		if list.ID == listIDInt {
 			lists = append(lists[:i], lists[i+1:]...)
 			break
 		}
@@ -74,16 +78,17 @@ func RemoveShoppingList(listId string) ([]types.ShoppingList, error) {
 	return lists, nil
 }
 
-func AddItemToShoppingList(listId string, item types.ListItem) (types.ListItem, error) {
+// AddItemToShoppingList returns a ListItem
+func AddItemToShoppingList(listID string, item types.ListItem) (types.ListItem, error) {
 	lists, err := GetShoppingLists()
-	listIdInt, _ := strconv.Atoi(listId)
-	item.ShoppingListID = listIdInt
+	listIDInt, _ := strconv.Atoi(listID)
+	item.ShoppingListID = listIDInt
 	if err != nil {
 		fmt.Println(err)
 		return types.ListItem{}, err
 	}
 	for i, list := range lists {
-		if list.ID == listIdInt {
+		if list.ID == listIDInt {
 			items := list.Items
 			var lastID int
 			if len(items) > 0 {
@@ -91,8 +96,8 @@ func AddItemToShoppingList(listId string, item types.ListItem) (types.ListItem, 
 			} else {
 				lastID = 0
 			}
-			newId := lastID + 1
-			item.ID = newId
+			newID := lastID + 1
+			item.ID = newID
 			list.Items = append(list.Items, item)
 			lists[i] = list
 			break
@@ -102,20 +107,21 @@ func AddItemToShoppingList(listId string, item types.ListItem) (types.ListItem, 
 	return item, nil
 }
 
-func RemoveItemFromShoppingList(listId string, itemId string) (types.ShoppingList, error) {
+// RemoveItemFromShoppingList returns a ShoppingList
+func RemoveItemFromShoppingList(listID string, itemID string) (types.ShoppingList, error) {
 	lists, err := GetShoppingLists()
-	listIdInt, _ := strconv.Atoi(listId)
-	itemIdInt, _ := strconv.Atoi(itemId)
+	listIDInt, _ := strconv.Atoi(listID)
+	itemIDInt, _ := strconv.Atoi(itemID)
 	if err != nil {
 		fmt.Println(err)
 		return types.ShoppingList{}, err
 	}
 	var modifiedList types.ShoppingList
 	for i, list := range lists {
-		if list.ID == listIdInt {
+		if list.ID == listIDInt {
 			items := list.Items
 			for j, item := range items {
-				if item.ID == itemIdInt {
+				if item.ID == itemIDInt {
 					items = append(items[:j], items[j+1:]...)
 					break
 				}
@@ -130,21 +136,22 @@ func RemoveItemFromShoppingList(listId string, itemId string) (types.ShoppingLis
 	return modifiedList, nil
 }
 
-func UpdateShoppingListItem(listId string, itemId string, updateFields types.ListItem) (types.ListItem, error) {
+// UpdateShoppingListItem returns a ListItem
+func UpdateShoppingListItem(listID string, itemID string, updateFields types.ListItem) (types.ListItem, error) {
 	lists, err := GetShoppingLists()
-	listIdInt, _ := strconv.Atoi(listId)
-	itemIdInt, _ := strconv.Atoi(itemId)
-	updateFields.ShoppingListID = listIdInt
+	listIDInt, _ := strconv.Atoi(listID)
+	itemIDInt, _ := strconv.Atoi(itemID)
+	updateFields.ShoppingListID = listIDInt
 	if err != nil {
 		fmt.Println(err)
 		return types.ListItem{}, err
 	}
 	var modifiedItem types.ListItem
 	for i, list := range lists {
-		if list.ID == listIdInt {
+		if list.ID == listIDInt {
 			items := list.Items
 			for j, item := range items {
-				if item.ID == itemIdInt {
+				if item.ID == itemIDInt {
 					item.IsChecked = updateFields.IsChecked
 					item.Quantity = updateFields.Quantity
 					item.Name = updateFields.Name

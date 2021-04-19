@@ -63,43 +63,43 @@ func main() {
 	})
 
 	// Get a specific shopping list
-	router.GET("/shopping-lists/:listId", func(c *gin.Context) {
-		listId := c.Param("listId")
-		list, _ := data.GetShoppingList(listId)
+	router.GET("/shopping-lists/:listID", func(c *gin.Context) {
+		listID := c.Param("listID")
+		list, _ := data.GetShoppingList(listID)
 		c.JSON(http.StatusOK, list)
 	})
 
 	// Remove an item to a shopping list
-	router.DELETE("/shopping-lists/:listId", func(c *gin.Context) {
-		listId := c.Param("listId")
-		res, _ := data.RemoveShoppingList(listId)
+	router.DELETE("/shopping-lists/:listID", func(c *gin.Context) {
+		listID := c.Param("listID")
+		res, _ := data.RemoveShoppingList(listID)
 		c.JSON(http.StatusOK, res)
 	})
 
 	// Add an item to a shopping list
-	router.POST("/shopping-lists/:listId/items", func(c *gin.Context) {
-		listId := c.Param("listId")
+	router.POST("/shopping-lists/:listID/items", func(c *gin.Context) {
+		listID := c.Param("listID")
 		var item types.ListItem
 		c.ShouldBind(&item)
-		addedItem, _ := data.AddItemToShoppingList(listId, item)
+		addedItem, _ := data.AddItemToShoppingList(listID, item)
 		c.JSON(http.StatusOK, addedItem)
 	})
 
-	// Remove an item to a shopping list
-	router.PATCH("/shopping-lists/:listId/items/:itemId", func(c *gin.Context) {
-		listId := c.Param("listId")
-		itemId := c.Param("itemId")
+	// Update an item in a shopping list
+	router.PATCH("/shopping-lists/:listID/items/:itemID", func(c *gin.Context) {
+		listID := c.Param("listID")
+		itemID := c.Param("itemID")
 		var item types.ListItem
 		c.ShouldBind(&item)
-		res, _ := data.UpdateShoppingListItem(listId, itemId, item)
+		res, _ := data.UpdateShoppingListItem(listID, itemID, item)
 		c.JSON(http.StatusOK, res)
 	})
 
-	// Remove an item to a shopping list
-	router.DELETE("/shopping-lists/:listId/items/:itemId", func(c *gin.Context) {
-		listId := c.Param("listId")
-		itemId := c.Param("itemId")
-		res, _ := data.RemoveItemFromShoppingList(listId, itemId)
+	// Remove an item from a shopping list
+	router.DELETE("/shopping-lists/:listID/items/:itemID", func(c *gin.Context) {
+		listID := c.Param("listID")
+		itemID := c.Param("itemID")
+		res, _ := data.RemoveItemFromShoppingList(listID, itemID)
 		c.JSON(http.StatusOK, res)
 	})
 
