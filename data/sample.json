@@ -8,14 +8,16 @@
                 "id": 3119,
                 "name": "coffee beans",
                 "quantity": 2,
-                "added_date": "2021-04-17",
+                "shopping_list_id": 0,
+                "added_at": "2021-04-18",
                 "is_checked": false
             },
             {
                 "id": 3120,
                 "name": "croissants",
                 "quantity": 3,
-                "added_date": "2021-04-16",
+                "shopping_list_id": 0,
+                "added_at": "2021-04-18",
                 "is_checked": false
             }
         ]
@@ -29,21 +31,24 @@
                 "id": 3241,
                 "name": "soy milk",
                 "quantity": 2,
-                "added_date": "2021-04-18",
+                "shopping_list_id": 0,
+                "added_at": "2021-04-18",
                 "is_checked": false
             },
             {
                 "id": 3242,
                 "name": "paper tower",
                 "quantity": 1,
-                "added_date": "2021-04-18",
+                "shopping_list_id": 0,
+                "added_at": "2021-04-18",
                 "is_checked": false
             },
             {
                 "id": 3243,
                 "name": "AAA battery",
                 "quantity": 4,
-                "added_date": "2021-04-18",
+                "shopping_list_id": 0,
+                "added_at": "2021-04-18",
                 "is_checked": false
             }
         ]

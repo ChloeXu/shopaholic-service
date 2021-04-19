@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"shopaholic-service/data"
 	"shopaholic-service/types"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,12 +41,15 @@ func main() {
 	// Get Tech design
 	router.GET("/tech-design", func(c *gin.Context) {
 		designPage, _ := loadTechDesign()
-		// // load thru html content
-		// c.HTML(http.StatusOK, "tech_design.tmpl", gin.H{
-		// 	"title": designPage.Title,
-		// 	"textBody":  designPage.Text,
-		// })
 		c.String(http.StatusOK, designPage.Text)
+	})
+
+	// Create a  new shopping list
+	router.POST("/shopping-lists", func(c *gin.Context) {
+		var list types.ShoppingList
+		c.ShouldBind(&list)
+		res, _ := data.CreateShoppingList(list)
+		c.JSON(http.StatusOK, res)
 	})
 
 	// Get all shopping lists
@@ -63,29 +65,42 @@ func main() {
 	// Get a specific shopping list
 	router.GET("/shopping-lists/:listId", func(c *gin.Context) {
 		listId := c.Param("listId")
-		lists, err := data.GetShoppingLists()
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		for i := 0; i < len(lists); i++ {
-			listIdInt, _ := strconv.Atoi(listId)
-			if lists[i].ID == listIdInt {
-
-				c.JSON(http.StatusOK, lists[i])
-				return
-			}
-		}
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound})
+		list, _ := data.GetShoppingList(listId)
+		c.JSON(http.StatusOK, list)
 	})
 
-	// However, this one will match /user/john/ and also /user/john/send
-	// If no other routers match /user/john, it will redirect to /user/john/
-	router.GET("/user/:name/*action", func(c *gin.Context) {
-		name := c.Param("name")
-		action := c.Param("action")
-		message := name + " is " + action
-		c.String(http.StatusOK, message)
+	// Remove an item to a shopping list
+	router.DELETE("/shopping-lists/:listId", func(c *gin.Context) {
+		listId := c.Param("listId")
+		res, _ := data.RemoveShoppingList(listId)
+		c.JSON(http.StatusOK, res)
+	})
+
+	// Add an item to a shopping list
+	router.POST("/shopping-lists/:listId/items", func(c *gin.Context) {
+		listId := c.Param("listId")
+		var item types.ListItem
+		c.ShouldBind(&item)
+		addedItem, _ := data.AddItemToShoppingList(listId, item)
+		c.JSON(http.StatusOK, addedItem)
+	})
+
+	// Remove an item to a shopping list
+	router.PATCH("/shopping-lists/:listId/items/:itemId", func(c *gin.Context) {
+		listId := c.Param("listId")
+		itemId := c.Param("itemId")
+		var item types.ListItem
+		c.ShouldBind(&item)
+		res, _ := data.UpdateShoppingListItem(listId, itemId, item)
+		c.JSON(http.StatusOK, res)
+	})
+
+	// Remove an item to a shopping list
+	router.DELETE("/shopping-lists/:listId/items/:itemId", func(c *gin.Context) {
+		listId := c.Param("listId")
+		itemId := c.Param("itemId")
+		res, _ := data.RemoveItemFromShoppingList(listId, itemId)
+		c.JSON(http.StatusOK, res)
 	})
 
 	router.Run(":8080")

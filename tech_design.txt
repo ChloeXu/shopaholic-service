@@ -15,11 +15,11 @@ Allow user to remove a shopping list completely
 
 APIs
 /v1/shopping-list POST  {name, created_date}
-/v1/shopping-list/{listId} GET
-/v1/shopping-list/{listId}/item POST {name, quantity}
-/v1/shopping-list/{listId}/item/{itemId} DELETE 
-/v1/shopping-list/{listId}/item/{itemId} PATCH {is_checked} 
-/v1/shopping-list/{listId} DELETE
+/v1/shopping-lists/{listId} GET
+/v1/shopping-lists/{listId}/items POST {name, quantity}
+/v1/shopping-lists/{listId}/items/{itemId} DELETE 
+/v1/shopping-lists/{listId}/items/{itemId} PATCH {is_checked} 
+/v1/shopping-lists/{listId} DELETE
 
 Data models
 Shopping list:
