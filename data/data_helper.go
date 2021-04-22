@@ -2,6 +2,7 @@ package data
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -28,7 +29,6 @@ func GetShoppingLists() ([]types.ShoppingList, error) {
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	var data []types.ShoppingList
 	json.Unmarshal([]byte(byteValue), &data)
-	fmt.Println(data)
 	return data, nil
 }
 
@@ -82,13 +82,14 @@ func RemoveShoppingList(listID string) ([]types.ShoppingList, error) {
 func AddItemToShoppingList(listID string, item types.ListItem) (types.ListItem, error) {
 	lists, err := GetShoppingLists()
 	listIDInt, _ := strconv.Atoi(listID)
-	item.ShoppingListID = listIDInt
 	if err != nil {
 		fmt.Println(err)
 		return types.ListItem{}, err
 	}
+	var foundListID int
 	for i, list := range lists {
 		if list.ID == listIDInt {
+			foundListID = list.ID
 			items := list.Items
 			var lastID int
 			if len(items) > 0 {
@@ -98,13 +99,19 @@ func AddItemToShoppingList(listID string, item types.ListItem) (types.ListItem, 
 			}
 			newID := lastID + 1
 			item.ID = newID
+			item.ShoppingListID = listIDInt
 			list.Items = append(list.Items, item)
 			lists[i] = list
 			break
 		}
 	}
-	writeListsToFile(lists)
-	return item, nil
+	if foundListID != 0 {
+		writeListsToFile(lists)
+		return item, nil
+	}
+
+	fmt.Println("Subject shopping list not found")
+	return types.ListItem{}, errors.New("Subject shopping list not found")
 }
 
 // RemoveItemFromShoppingList returns a ShoppingList

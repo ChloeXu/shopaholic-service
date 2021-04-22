@@ -1,37 +1,18 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"shopaholic-service/data"
 	"shopaholic-service/types"
+	"shopaholic-service/utilities"
 
 	"github.com/gin-gonic/gin"
 )
 
-func testingHandler(w http.ResponseWriter, r *http.Request) {
-	sampleList := types.ShoppingList{
-		ID:        1,
-		Name:      "HMart",
-		CreatedAt: "2021-04-19",
-		Items:     []types.ListItem{},
-	}
-	b, err := json.Marshal(sampleList)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Fprint(w, string(b))
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
-}
-
 func main() {
 	router := gin.Default()
-
+	router.Use(utilities.Logger())
 	router.LoadHTMLGlob("templates/*")
 	// Health check
 	router.GET("/ping", func(c *gin.Context) {
@@ -81,7 +62,11 @@ func main() {
 		listID := c.Param("listID")
 		var item types.ListItem
 		c.ShouldBind(&item)
-		addedItem, _ := data.AddItemToShoppingList(listID, item)
+		addedItem, err := data.AddItemToShoppingList(listID, item)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
+			return
+		}
 		c.JSON(http.StatusOK, addedItem)
 	})
 
