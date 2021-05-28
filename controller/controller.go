@@ -1,4 +1,4 @@
-package data
+package controller
 
 import (
 	"encoding/json"
@@ -13,13 +13,13 @@ import (
 
 func writeListsToFile(lists []types.ShoppingList) {
 	bytes, _ := json.Marshal(lists)
-	filename := "./data/sample.json"
+	filename := "./controller/sample.json"
 	ioutil.WriteFile(filename, bytes, 0600)
 }
 
 // GetShoppingLists returns a list of shoppingList
 func GetShoppingLists() ([]types.ShoppingList, error) {
-	filename := "./data/sample.json"
+	filename := "./controller/sample.json"
 	jsonFile, err := os.Open(filename)
 	if err != nil {
 		fmt.Println(err)
@@ -29,6 +29,7 @@ func GetShoppingLists() ([]types.ShoppingList, error) {
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	var data []types.ShoppingList
 	json.Unmarshal([]byte(byteValue), &data)
+	fmt.Println(data)
 	return data, nil
 }
 
